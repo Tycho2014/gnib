@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+  <meta charset="UTF-8">
+  <title>Gnib</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      font-family: 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      color: #0078D7;
+      font-size: 3em;
+    }
+    input[type="text"] {
+      padding: 15px;
+      font-size: 18px;
+      width: 60%;
+      border: 2px solid #0078D7;
+      border-radius: 8px 0 0 8px;
+      outline: none;
+    }
+    button {
+      padding: 15px 25px;
+      font-size: 18px;
+      background: #0078D7;
+      color: white;
+      border: none;
+      border-radius: 0 8px 8px 0;
+      cursor: pointer;
+    }
+    #results, #fakePage {
+      margin-top: 30px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      text-align: left;
+    }
+    .result-card {
+      background: white;
+      padding: 15px;
+      margin-bottom: 10px;
+      border-radius: 10px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    }
+    .hidden {
+      display: none;
+    }
+    .result-card:hover {
+      background: #e6f0ff;
+    }
+    #fakePage h2 {
+      color: #0078D7;
+    }
+    #fakePage p {
+      margin-bottom: 15px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+<body>
+  <h1>🔍 Gnib</h1>
+  <input type="text" id="searchInput" placeholder="Typ iets...">
+  <button onclick="toonResultaten()">Zoek</button>
+
+  <div id="results"></div>
+  <div id="fakePage" class="hidden"></div>
+
+  <script>
+    const titels = [
+      "De geschiedenis van {q}",
+      "Hoe gebruik je {q}",
+      "Waarom je echt {q} moet proberen",
+      "De geheime kant van {q}",
+      "Wat experts zeggen over {q}"
+    ];
+
+    function toonResultaten() {
+      const query = document.getElementById('searchInput').value.trim();
+      const resultsDiv = document.getElementById('results');
+      const fakePageDiv = document.getElementById('fakePage');
+
+      if (!query) {
+        resultsDiv.innerHTML = '<p>Typ eerst iets in de zoekbalk!</p>';
+        return;
+      }
+
+      fakePageDiv.classList.add('hidden');
+      resultsDiv.classList.remove('hidden');
+
+      let html = `<h2>Resultaten voor "${query}":</h2>`;
+      titels.forEach((template, index) => {
+        const title = template.replace("{q}", query);
+        html += `
+          <div class="result-card" onclick="toonNepPagina('${title}', '${query}', ${index})">
+            <h3>${title}</h3>
+            <p>Klik om te openen</p>
+          </div>
+        `;
+      });
+
+      resultsDiv.innerHTML = html;
+    }
+
+    function toonNepPagina(title, query, index) {
+      const resultsDiv = document.getElementById('results');
+      const fakePageDiv = document.getElementById('fakePage');
+
+      resultsDiv.classList.add('hidden');
+      fakePageDiv.classList.remove('hidden');
+
+      const artikelen = [
+        `<p>De geschiedenis van ${query} begint in de schaduw van vergeten beschavingen. Oude inscripties tonen aan dat ${query} al duizenden jaren een rol speelt in rituelen, handel en conflict. In de middeleeuwen werd ${query} verboden door koninklijke decreten, maar bleef het bestaan in geheime genootschappen. Tijdens de renaissance bloeide ${query} opnieuw op, ditmaal als inspiratiebron voor kunstenaars en filosofen. In de moderne tijd is ${query} uitgegroeid tot een wereldwijd fenomeen, met invloed op technologie, cultuur en zelfs politiek. De geschiedenis van ${query} is een verhaal van onderdrukking, herontdekking en triomf.</p>`,
+
+        `<p>${query} gebruiken lijkt eenvoudig, maar de ware kunst zit in de nuance. Eerst moet je begrijpen wat een ${query} werkelijk is — niet alleen fysiek, maar ook symbolisch. Vervolgens leer je de technieken: vasthouden, activeren, toepassen. Er zijn talloze variaties, elk met hun eigen regels en rituelen. In sommige culturen wordt een ${query} zelfs als heilig beschouwd. Moderne toepassingen variëren van huishoudelijk gebruik tot wetenschappelijke experimenten. Wie een ${query} beheerst, beheerst een stukje van de wereld.</p>`,
+
+
+
+
+
+        `<p>Waarom zou je ${query} proberen? Omdat het je leven kan verrijken op manieren die je nooit had verwacht. Mensen die ${query} hebben geprobeerd, melden verhoogde creativiteit, diepe inzichten en een gevoel van verbondenheid. Sommigen gebruiken het als therapie, anderen als expressie. Het is niet zonder risico’s — zoals alles wat krachtig is — maar de voordelen wegen vaak zwaarder. In dit artikel verkennen we de ervaringen van gebruikers, de wetenschappelijke onderbouwing, en de culturele betekenis van het proberen van ${query}.</p>`,
+
+        `<p>Achter ${query} schuilt een kant die zelden besproken wordt. In geheime archieven en vergeten boeken wordt gesproken over de duistere oorsprong van ${query}. Sommigen beweren dat het verbonden is met oude magie, anderen zien het als een instrument van controle. In dit artikel duiken we in de complottheorieën, de verborgen symboliek en de mysterieuze gebeurtenissen die allemaal draaien om ${query}. Is het toeval, of zit er meer achter? De geheime kant van ${query} is een reis door het onbekende.</p>`,
+
+        `<p>Experts van over de hele wereld hebben zich gebogen over ${query}. Van neurowetenschappers tot antropologen, iedereen lijkt gefascineerd door de impact ervan. Sommigen zien het als een cognitief hulpmiddel, anderen als een sociaal fenomeen. In dit artikel verzamelen we inzichten van toonaangevende denkers, onderzoeken we de laatste studies, en proberen we een antwoord te vinden op de vraag: wat is ${query} echt? De meningen zijn verdeeld, maar één ding is zeker — het is een onderwerp dat blijft intrigeren.</p>`
+      ];
+
+      const artikel = artikelen[index] || `<p>Er is nog geen artikel over ${query}. Probeer een andere zoekterm.</p>`;
+
+      fakePageDiv.innerHTML = `
+        <h2>${title}</h2>
+        ${artikel}
+        <button onclick="terug()">🔙 Terug naar zoekresultaten</button>
+      `;
+    }
+
+    function terug() {
+      document.getElementById('fakePage').classList.add('hidden');
+      document.getElementById('results').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
